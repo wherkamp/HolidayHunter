@@ -25,7 +25,7 @@ public class NMSUtil {
 
     }
 
-    public static void applyTextureToItem(Object texture, Block b) {
+    public static void applyTextureToItem(String texture, Block b) {
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), null);
         gameProfile.getProperties().put("textures", new com.mojang.authlib.properties.Property("textures", texture));
         try {
@@ -38,7 +38,7 @@ public class NMSUtil {
             Method getTileEntity = nmsWorld.getClass().getMethod("getTileEntity", blockPositionClass);
             tileEntity = tileEntityClass.cast(getTileEntity.invoke(nmsWorld,
                     getBlockPositionFor(b.getX(), b.getY(), b.getZ())));
-            tileEntityClass.getMethod("setGameProfile", new Class[]{GameProfile.class}).invoke(tileEntity, profile);
+            tileEntityClass.getMethod("setGameProfile", GameProfile.class).invoke(tileEntity, profile);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

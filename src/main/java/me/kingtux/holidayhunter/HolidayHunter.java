@@ -22,6 +22,7 @@ import java.util.Map;
 public final class HolidayHunter extends JavaPlugin {
     private Map<String, String> heads = new HashMap<>();
     private Map<Player, HolidaySession> sessions = new HashMap<>();
+    private HeadManager headManager;
 
     @Override
     public void onEnable() {
@@ -96,5 +97,17 @@ public final class HolidayHunter extends JavaPlugin {
 
     public Map<Player, HolidaySession> getSessions() {
         return sessions;
+    }
+
+    public void newSession(Player sender) {
+        sessions.put(sender, new HolidaySession(sender));
+    }
+
+    public void updateSession(Player player, HolidaySession session) {
+        sessions.put(player, session);
+    }
+
+    public HeadManager getHeadManager() {
+        return headManager;
     }
 }

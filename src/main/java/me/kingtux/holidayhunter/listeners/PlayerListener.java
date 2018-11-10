@@ -6,10 +6,13 @@ import me.kingtux.holidayhunter.utils.NMSUtil;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Map;
+
 import static java.util.Map.Entry;
+
 import java.util.Random;
 import java.util.Set;
 
@@ -22,7 +25,6 @@ public class PlayerListener implements Listener {
         if (!nbtTileEntity.hasKey("PURPOSE") || !nbtTileEntity.getString("PURPOSE").equals(holidayHunter.getName().toUpperCase())) {
             return;
         }
-
         Set<Entry<String, String>> stuff = holidayHunter.getHeads().entrySet();
         Entry[] entry = new Entry[stuff.size()];
         int i = 0;
@@ -30,7 +32,7 @@ public class PlayerListener implements Listener {
             entry[i] = stringStringEntry;
             i++;
         }
-        NMSUtil.applyTextureToItem(entry[new Random().nextInt(entry.length)].getValue(), event.getBlock());
+        NMSUtil.applyTextureToItem((String) entry[new Random().nextInt(entry.length)].getValue(), event.getBlock());
         event.getPlayer().sendMessage("HeadHunter Block Placed");
     }
 
@@ -40,7 +42,11 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent e) {
-
         holidayHunter.remove(e.getPlayer());
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+
     }
 }
