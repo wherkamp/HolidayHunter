@@ -1,0 +1,8 @@
+name: HolidayHunter
+version: ${project.version}
+main: me.kingtux.holidayhunter.HolidayHunter
+prefix: HHunter
+softdepend: [PlaceholderAPI]
+authors: [KingTux]
+description: Like finding heads on a Holiday well Merry Christmas
+website: https://kingtux.me

@@ -1,0 +1,8 @@
+command:
+  command: holiday-hunter
+  description: 'Hunt for the holiday'
+  format: '/holiday-hunter '
+  aliases:
+    - 'h-h'
+    - 'hh'
+heads:
