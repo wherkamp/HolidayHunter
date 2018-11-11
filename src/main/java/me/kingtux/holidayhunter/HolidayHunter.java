@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public final class HolidayHunter extends JavaPlugin {
         getConfig().getConfigurationSection("heads").getKeys(false).forEach(s -> {
             heads.put(s.toLowerCase(), getConfig().getString("heads." + s));
         });
-
+        saveResource("lang.yml", false);
         try {
             //Make Sure that static part loads!
             Class.forName("me.kingtux.holidayhunter.utils.NMSUtil");
@@ -42,6 +43,7 @@ public final class HolidayHunter extends JavaPlugin {
         headManager = new HeadManager(this);
 
         //Use IkeaCommand command library
+        getLogger().info("IkeaEssentials Command and Lang API are implemented into this jar!");
         CommandManager commandManager = new CommandManager(this);
         MyIkeaCommandRules ikeaCommandRules =
                 new MyIkeaCommandRules(HolidayCommand.class.getAnnotation(IkeaCommandRules.class));
@@ -57,30 +59,13 @@ public final class HolidayHunter extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
     }
 
-    public static String fileToString(File file) throws IOException {
-        if (file.exists()) {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            return getContentFromBufferedReader(bufferedReader);
-        }
-
-        return null;
-
-    }
-
-    public static String getContentFromBufferedReader(BufferedReader bufferedReader)
-            throws IOException {
-
-        String fullContent = "";
-        String singleLine = "";
-        while ((singleLine = bufferedReader.readLine()) != null) {
-            fullContent += singleLine + "\n";
-        }
-        return fullContent;
-    }
-
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        try {
+            headManager.getConnection().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public Map<String, String> getHeads() {

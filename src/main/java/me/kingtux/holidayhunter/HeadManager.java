@@ -283,4 +283,8 @@ public class HeadManager {
             this.sql = sql;
         }
     }
+
+     Connection getConnection() {
+        return connection;
+    }
 }
