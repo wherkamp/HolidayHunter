@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.io.File;
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static me.kingtux.holidayhunter.HolidaySession.HeadProduct;
 
@@ -223,9 +224,17 @@ public class HeadManager {
 
     public void brokeHead(UUID uuid, Location location) {
         int i = getHeadID(location);
+        Arrays.stream(getCollectedHeads(uuid)).forEach(System.out::println);
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SQL.UPDATE_USER.sql);
-            preparedStatement.setString(1, StringUtils.join(getCollectedHeads(uuid), "__-__") + "__-__" + i);
+            final String[] t = {""};
+            Arrays.stream(getCollectedHeads(uuid)).forEach(i1 -> {
+                if (i1 != 0) {
+                    t[0] += i1 + "__-__";
+                }
+            });
+            t[0] += i;
+            preparedStatement.setString(1, t[0]);
             preparedStatement.setString(2, uuid.toString());
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -239,15 +248,43 @@ public class HeadManager {
             PreparedStatement preparedStatement = connection.prepareStatement(SQL.GET_USER.sql);
             preparedStatement.setString(1, uuid.toString());
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                stuff = resultSet.getString("heads").split("__-__");
-                break;
-            }
+            resultSet.next();
+            stuff = resultSet.getString("heads").split("__-__");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Arrays.stream(stuff).map(this::parseInt).mapToInt(i -> i).toArray();
+        List<Integer> list = Arrays.stream(stuff).map(this::parseInt).collect(Collectors.toList());
+        removeDuplicates(list);
+        return list.stream().mapToInt(i -> i).toArray();
     }
+
+
+    public static void removeDuplicates(List<?> strings) {
+
+        int size = strings.size();
+
+        // not using a method in the check also speeds up the execution
+        // also i must be less that size-1 so that j doesn't
+        // throw IndexOutOfBoundsException
+        for (int i = 0; i < size - 1; i++) {
+            // start from the next item after strings[i]
+            // since the ones before are checked
+            for (int j = i + 1; j < size; j++) {
+                // no need for if ( i == j ) here
+                if (!strings.get(j).equals(strings.get(i)))
+                    continue;
+                strings.remove(j);
+                // decrease j because the array got re-indexed
+                j--;
+                // decrease the size of the array
+                size--;
+            } // for j
+        } // for i
+
+
+    }
+
 
     public int parseInt(String in) {
         try {
@@ -261,7 +298,12 @@ public class HeadManager {
     public boolean canBreak(Player player, Location location) {
         int[] heads = getCollectedHeads(player.getUniqueId());
         int head = getHeadID(location);
-        return !Arrays.asList(heads).contains(head);
+        return !contains(heads, head);
+    }
+
+    public static boolean contains(int[] arr, int item) {
+        int index = Arrays.binarySearch(arr, item);
+        return index >= 0;
     }
 
     private enum SQL {
@@ -284,7 +326,7 @@ public class HeadManager {
         }
     }
 
-     Connection getConnection() {
+    Connection getConnection() {
         return connection;
     }
 }

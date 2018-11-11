@@ -80,6 +80,7 @@ public class PlayerListener implements Listener {
         HolidaySession.HeadProduct product = holidayHunter.getHeadManager().getHeadAtLocation(event.getClickedBlock().getLocation());
         act(product, event.getPlayer());
         holidayHunter.getHeadManager().brokeHead(event.getPlayer().getUniqueId(), event.getClickedBlock().getLocation());
+ 
     }
 
     private void act(HolidaySession.HeadProduct product, Player player) {
