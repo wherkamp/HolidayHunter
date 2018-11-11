@@ -1,12 +1,14 @@
 package me.kingtux.holidayhunter.lang;
 
 import me.kingtux.simpleannotation.AnnotationFinder;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class LangLoader {
     public static void loadLang(File file, Class<? extends Enum> enu, boolean writeUnsetValues) {
@@ -22,7 +24,11 @@ public class LangLoader {
             //Basically if it is not found in the needed language it will revert back to the default in English
             if (fileConfiguration.get(configEntry.path()) != null) {
                 try {
-                    editibleThing.set(Enum.valueOf(enu, field.getName()), fileConfiguration.get(configEntry.path()));
+                    if (fileConfiguration.get(configEntry.path()) instanceof List) {
+                        editibleThing.set(Enum.valueOf(enu, field.getName()), StringUtils.join(fileConfiguration.getStringList(configEntry.path()).toArray(new String[0]), "\n"));
+                    } else {
+                        editibleThing.set(Enum.valueOf(enu, field.getName()), fileConfiguration.getString(configEntry.path()));
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }

@@ -58,16 +58,16 @@ public class HolidayCommand implements IkeaCommand {
 
     @TabCompleter(type = TabCompleter.TYPE.SUB_COMMAND, subCommandToEffect = "head")
     public List<String> headTabCompleter() {
-        return Arrays.asList(holidayHunter.getHeadManager().getAllNamesOfHeads());
+        return Arrays.asList(getHeadManager().getAllNamesOfHeads());
     }
 
 
     @SubCommand(subcommand = "name")
     public void nameCommand(Player player, String[] args) {
-        if (holidayHunter.getSessions().containsKey(player)) {
+        if (!holidayHunter.getSessions().containsKey(player)) {
             //BAD PERSON
         }
-        if (args.length == 1) {
+        if (args.length == 0) {
             player.sendMessage("Please provide a name");
         }
         HolidaySession holidaySession = holidayHunter.getSessions().get(player);
@@ -76,7 +76,55 @@ public class HolidayCommand implements IkeaCommand {
             player.sendMessage("Names may not have multiple words if you want to use _");
         }
         holidaySession.name(args[0]);
-            holidayHunter.updateSession(player, holidaySession);
+        holidayHunter.updateSession(player, holidaySession);
+        player.sendMessage(LangFile.SET_COMMANDS.colorStringList().toArray(new String[0]));
+    }
+
+    @SubCommand(subcommand = "command", alias = "commands")
+    public void commandSubCommand(Player player, String[] args) {
+        if (!holidayHunter.getSessions().containsKey(player)) {
+            //BAD PERSON
+        }
+        if (args.length == 0) {
+            player.sendMessage("Please provide a command");
+        }
+        HolidaySession holidaySession = holidayHunter.getSessions().get(player);
+        holidaySession.parseCommand(StringUtils.join(args));
+        holidayHunter.updateSession(player, holidaySession);
+        player.sendMessage(LangFile.SET_MESSAGES.colorStringList().toArray(new String[0]));
+
+
+    }
+
+    @OtherCommand(commandType = OtherCommand.CommandType.HELP)
+    @SubCommand(subcommand = "help")
+    public void helpSubCommand(Player player, String[] args) {
+        player.sendMessage("AT the moment please message KingTUx for help");
+    }
+
+    @SubCommand(subcommand = "message", alias = "messages")
+    public void messageSubCommand(Player player, String[] args) {
+        if (!holidayHunter.getSessions().containsKey(player)) {
+            //BAD PERSON
+        }
+        if (args.length == 0) {
+            player.sendMessage("Please provide a command");
+        }
+        HolidaySession holidaySession = holidayHunter.getSessions().get(player);
+        holidaySession.parseMessages(StringUtils.join(args));
+        holidayHunter.updateSession(player, holidaySession);
+        player.sendMessage(LangFile.FINISH.colorStringList().toArray(new String[0]));
+
+    }
+
+    @SubCommand(subcommand = "finish")
+    public void finishSubCommand(Player player, String[] args) {
+        if (!holidayHunter.getSessions().containsKey(player)) {
+            //BAD PERSON
+        }
+        getHeadManager().createHead(holidayHunter.getSessions().get(player).finish());
+        player.getInventory().addItem(getHeadManager().createItem(holidayHunter.getSessions().get(player).getName()));
+        player.sendMessage(LangFile.HERE_IS_YOUR_HEAD.getColorValue());
     }
 
     @SubCommand(subcommand = "clear-sessions")
@@ -88,8 +136,6 @@ public class HolidayCommand implements IkeaCommand {
         }
 
     }
-
-
 
 
     @Override

@@ -1,0 +1,18 @@
+common:
+  must-be-a-player: 'Hey you must be a player'
+  lack-of-permission: 'Sorry you lack permission to do that'
+already-have-a-session: 'We found you are already in a session! You are on step %s'
+hunt-announcements:
+  started-the-hunt: '%player_displayname% has joined the hunt'
+  finished-the-hunt: '%player_displayname% has finished the hunt'
+  found-head: 'You found a head %hh_completed% of %hh_total%'
+command:
+  set-name: 'RUn /hh name {name} to set the heads name'
+  set-command: 'RUn /hh command {command1} | {command2} to set the heads commands'
+  set-message: 'RUn /hh message  {message1} | {message2} to set the heads messages'
+  finish: 'Run /hh finish this creates the heads and stores it in the database'
+  here-is-your-head: 'Here is your head'
+item:
+  name: 'Place head on ground to make a head'
+  lore:
+    - 'Right click to place'

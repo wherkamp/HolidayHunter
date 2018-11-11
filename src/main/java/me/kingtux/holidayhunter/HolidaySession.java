@@ -1,7 +1,9 @@
 package me.kingtux.holidayhunter;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class HolidaySession {
@@ -21,13 +23,14 @@ public class HolidaySession {
         sessionStatus = SessionStatus.COMMANDS;
     }
 
-    private void parseCommand(String stuff) {
-
+    public void parseCommand(String stuff) {
+        String[] commands = stuff.split("\\|");
+        this.commands = commands;
         sessionStatus = SessionStatus.MESSAGES;
     }
 
-    private void parseMessages() {
-
+    public void parseMessages(String stuff) {
+        messages = stuff.split("\\|");
         sessionStatus = SessionStatus.FINISH;
     }
 
@@ -38,6 +41,10 @@ public class HolidaySession {
         }
         return new HeadProduct(commands, messages, name);
 
+    }
+
+    public String getName() {
+        return name;
     }
 
     public static class HeadProduct {
@@ -69,6 +76,16 @@ public class HolidaySession {
 
         public String getName() {
             return name;
+        }
+
+        @Override
+        public String toString() {
+            return "HeadProduct{" +
+                    "commands=" + Arrays.toString(commands) +
+                    ", messages=" + Arrays.toString(messages) +
+                    ", name='" + name + '\'' +
+                    ", id=" + id +
+                    '}';
         }
     }
 

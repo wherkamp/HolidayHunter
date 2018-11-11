@@ -39,7 +39,7 @@ public final class HolidayHunter extends JavaPlugin {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
+        headManager = new HeadManager(this);
 
         //Use IkeaCommand command library
         CommandManager commandManager = new CommandManager(this);

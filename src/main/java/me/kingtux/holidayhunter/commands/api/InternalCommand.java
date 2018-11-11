@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,9 +111,11 @@ public class InternalCommand extends Command {
                 }
             }
             for (InternalSubCommand internalSubCommand : internalSubCommands) {
-                List<String> d = Arrays.asList(args);
-                d.remove(0);
-                internalSubCommand.invoke(d.toArray(new String[0]), sender, commandLabel);
+                if (internalSubCommand.getAnnotation().subcommand().equalsIgnoreCase(args[0]) || Arrays.asList(internalSubCommand.getAnnotation().alias()).contains(args[0].toLowerCase())) {
+                    List<String> d = new LinkedList<>(Arrays.asList(args));
+                    d.remove(0);
+                    internalSubCommand.invoke(d.toArray(new String[0]), sender, commandLabel);
+                }
             }
         } else {
             for (InternalOtherCommand internalOtherCommand : internalOtherCommands) {
