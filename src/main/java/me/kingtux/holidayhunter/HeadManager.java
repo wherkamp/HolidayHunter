@@ -1,10 +1,14 @@
 package me.kingtux.holidayhunter;
 
 import de.tr7zw.itemnbtapi.NBTItem;
+import me.kingtux.holidayhunter.lang.LangFile;
+import org.apache.commons.lang3.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.sql.*;
@@ -35,11 +39,23 @@ public class HeadManager {
     }
 
     public HeadProduct getHeadByName(String name) {
-        return null;
+        HeadProduct product = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL.GET_HEAD_BY_NAME.getSql());
+            preparedStatement.setString(1, name.toLowerCase());
+            ResultSet set = preparedStatement.executeQuery();
+            while (set.next()) {
+                product = new HeadProduct(set.getString("commands").split("__-__"), set.getString("messages").split("__-__"), name);
+                product.setId(set.getInt("id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return product;
     }
 
     public boolean isHead(String name) {
-        return true;
+        return getHeadByName(name) != null;
     }
 
 
@@ -51,6 +67,7 @@ public class HeadManager {
             t.setString(2, badlyCombine(headProduct.getCommands()));
             t.setString(3, badlyCombine(headProduct.getMessages()));
             t.setString(4, "true");
+            t.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -70,12 +87,18 @@ public class HeadManager {
     }
 
     public ItemStack createItem(HeadProduct headProduct) {
+        if (headProduct == null) {
+            return null;
+        }
         ItemStack itemStack = new ItemStack(Material.SKULL_ITEM);
         NBTItem nbti = new NBTItem(itemStack);
         nbti.setString("PURPOSE", holidayHunter.getName().toUpperCase());
         nbti.setInteger("ID", headProduct.getId());
         itemStack = nbti.getItem();
-
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', LangFile.ITEM_NAME.getString()));
+        itemMeta.setLore(ChatColor.translateAlternateColorCodes('&', LangFile.ITEM_LORE.getStringList()));
+        itemStack.setItemMeta(itemMeta);
         return itemStack;
     }
 
@@ -98,7 +121,8 @@ public class HeadManager {
     private enum SQL {
         TABLE("CREATE TABLE IF NOT EXISTS heads ( id integer PRIMARY KEY AUTOINCREMENT, name text, commands text, messages text, alive text); "),
         GET_HEADS_NAMES("SELECT name from heads where alive=\"true\";"),
-        CREATE_HEAD("INSERT INTO heads (name, commands, messages, alive) VALUES (?,?,?,?);");
+        CREATE_HEAD("INSERT INTO heads (name, commands, messages, alive) VALUES (?,?,?,?);"),
+        GET_HEAD_BY_NAME("SELECT * from heads where name=?;");
         private String sql;
 
         public String getSql() {
