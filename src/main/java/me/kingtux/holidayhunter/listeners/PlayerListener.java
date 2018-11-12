@@ -29,6 +29,12 @@ public class PlayerListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.getBlock() == null) {
+            return;
+        }
+        if (event.getBlock().getType() != Material.SKULL) {
+            return;
+        }
         NBTItem item = new NBTItem(event.getItemInHand());
         if (!item.hasKey("PURPOSE")) {
             return;
@@ -46,12 +52,15 @@ public class PlayerListener implements Listener {
         event.getPlayer().sendMessage("HeadHunter Block Placed");
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         if (event.getBlock() == null) {
             return;
         }
         if (event.getBlock().getType() != Material.SKULL) {
+            return;
+        }
+        if (holidayHunter.getHolidayManager().getHeadProductAt(event.getBlock().getLocation()) == null) {
             return;
         }
         if (!event.getPlayer().hasPermission("hh.breaker")) {
@@ -62,12 +71,15 @@ public class PlayerListener implements Listener {
         holidayHunter.getHolidayManager().deletePlacedHead(event.getBlock().getLocation());
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getClickedBlock() == null) {
             return;
         }
         if (event.getClickedBlock().getType() != Material.SKULL) {
+            return;
+        }
+        if (holidayHunter.getHolidayManager().getHeadProductAt(event.getClickedBlock().getLocation()) == null) {
             return;
         }
         if (holidayHunter.getHolidayManager().hasCollected(event.getPlayer(), event.getClickedBlock().getLocation())) {

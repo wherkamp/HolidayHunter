@@ -23,7 +23,10 @@ public class PlaceHolder extends PlaceholderExpansion {
         if (params.equalsIgnoreCase("total-heads")) {
             return String.valueOf(holidayHunter.getHolidayManager().getNumberOfPlacedHeads());
         } else if (params.equalsIgnoreCase("completed-heads")) {
-            return String.valueOf(holidayHunter.getHolidayManager().numberOfCollectedHeads(p));
+            if(holidayHunter.getHolidayManager().numberOfCollectedHeads(p)==holidayHunter.getHolidayManager().getNumberOfPlacedHeads()){
+                return String.valueOf(holidayHunter.getHolidayManager().getNumberOfPlacedHeads());
+            }
+            return String.valueOf(holidayHunter.getHolidayManager().numberOfCollectedHeads(p) +1);
         }
 
         return "";

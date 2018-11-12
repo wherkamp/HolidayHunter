@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 
 public class InternalBaseCommand {
@@ -21,7 +22,11 @@ public class InternalBaseCommand {
 
     public void invoke(String[] args, CommandSender sender, String commandUsed) {
         try {
-            methodToInvoke.invoke(commandObject, CommandUtils.getParameters(args, methodToInvoke, commandObject,sender,commandUsed));
+            Object[] stuff = CommandUtils.getParameters(args, methodToInvoke, commandObject,sender,commandUsed);
+            if(stuff ==null){
+                return;
+            }
+            methodToInvoke.invoke(commandObject,stuff);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }catch (Exception e){
@@ -32,7 +37,11 @@ public class InternalBaseCommand {
 
     public List<String> invokeTab(String[] args, CommandSender sender, String commandUsed) {
         try {
-            return (List<String>) tabCompleter.invoke(commandObject, CommandUtils.getParameters(args, tabCompleter, commandObject,sender,commandUsed));
+            Object[] stuff = CommandUtils.getParameters(args, methodToInvoke, commandObject,sender,commandUsed);
+            if(stuff ==null){
+                return Collections.emptyList();
+            }
+            return (List<String>) tabCompleter.invoke(commandObject, stuff);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

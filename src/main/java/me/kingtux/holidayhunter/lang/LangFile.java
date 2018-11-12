@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public enum LangFile {
@@ -45,8 +44,10 @@ public enum LangFile {
 
     @ConfigEntry(path = "hunt-announcements.started-the-hunt")
     STARTED_THE_HUNT("%player_displayname% has finished the hunt"),
-@ConfigEntry(path="already-collected")
-ALREADY_COLLECTED("You already collected that one");
+    @ConfigEntry(path = "already-collected")
+    ALREADY_COLLECTED("You already collected that one"),
+    @ConfigEntry(path = "placed-head")
+    PLACED_HEAD("You have placed a head");
     @ConfigValue
     private String value;
 

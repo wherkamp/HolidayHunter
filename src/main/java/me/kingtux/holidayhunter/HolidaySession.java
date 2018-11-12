@@ -1,7 +1,6 @@
 package me.kingtux.holidayhunter;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -25,12 +24,22 @@ public class HolidaySession {
 
     public void parseCommand(String stuff) {
         String[] commands = stuff.split("\\|");
+        for (int i = 0; i < commands.length; i++) {
+            if (commands[i].startsWith(" ")) {
+                commands[i] = commands[i].substring(1);
+            }
+        }
         this.commands = commands;
         sessionStatus = SessionStatus.MESSAGES;
     }
 
     public void parseMessages(String stuff) {
         messages = stuff.split("\\|");
+        for (int i = 0; i < messages.length; i++) {
+            if (messages[i].startsWith(" ")) {
+                messages[i] = messages[i].substring(1);
+            }
+        }
         sessionStatus = SessionStatus.FINISH;
     }
 

@@ -7,6 +7,7 @@ hunt-announcements:
   started-the-hunt: '%player_displayname% has joined the hunt'
   finished-the-hunt: '%player_displayname% has finished the hunt'
 already-collected: 'You already collected that head'
+placed-head: 'You have placed a head'
 command:
   set-name: 'RUn /hh name {name} to set the heads name'
   set-command: 'RUn /hh command {command1} | {command2} to set the heads commands'

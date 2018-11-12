@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 
 public class InternalSubCommand {
@@ -23,19 +24,29 @@ public class InternalSubCommand {
 
     public void invoke(String[] args, CommandSender sender, String commandUsed) {
         try {
-            methodToInvoke.invoke(commandObject, CommandUtils.getParameters(args, methodToInvoke, commandObject,sender,commandUsed));
+            Object[] stuff = CommandUtils.getParameters(args, methodToInvoke, commandObject, sender, commandUsed);
+            if (stuff == null) {
+                return;
+            }
+            methodToInvoke.invoke(commandObject, stuff);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
     }
+
     public List<String> invokeTab(String[] args, CommandSender sender, String commandUsed) {
         try {
-            return (List<String>) tabCompleterMethod.invoke(commandObject, CommandUtils.getParameters(args, tabCompleterMethod, commandObject,sender,commandUsed));
+            Object[] stuff = CommandUtils.getParameters(args, methodToInvoke, commandObject, sender, commandUsed);
+            if (stuff == null) {
+                return Collections.emptyList();
+            }
+            return (List<String>) tabCompleterMethod.invoke(commandObject, stuff);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        return  null;
+        return null;
     }
+
     public SubCommand getAnnotation() {
         return annotation;
     }

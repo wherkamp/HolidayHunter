@@ -286,7 +286,7 @@ public class HolidayManager {
                 Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, s)));
             });
             holidayHunter.getConfig().getStringList("start-hunt").forEach(s -> {
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), s.replace("%player%", player.getName()));
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, s.replace("%player%", player.getName()))));
             });
         }
         int numberCollectedHeads = numberOfCollectedHeads(player);
@@ -294,7 +294,9 @@ public class HolidayManager {
         System.out.println("placeId = " + placeId);
         StringBuilder stringBuilder = new StringBuilder();
         for (int i : getCollectedHeads(player)) {
-            stringBuilder = stringBuilder.append(i).append("__-__");
+            if (isPlacedHead(i)) {
+                stringBuilder = stringBuilder.append(i).append("__-__");
+            }
         }
         stringBuilder = stringBuilder.append(placeId);
         System.out.println("stringBuilder.toString() = " + stringBuilder.toString());
@@ -312,9 +314,23 @@ public class HolidayManager {
                 Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, s)));
             });
             holidayHunter.getConfig().getStringList("end-hunt").forEach(s -> {
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), PlaceholderAPI.setPlaceholders(player, s.replace("%player%", player.getName())));
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, s.replace("%player%", player.getName()))));
             });
         }
+    }
+
+    private boolean isPlacedHead(int i) {
+        boolean b = false;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL.GET_PLACED_BY_ID.sql);
+            preparedStatement.setInt(1, i);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            b = resultSet.next();
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return b;
     }
 
     public boolean hasCollected(Player player, Location location) {
@@ -374,6 +390,7 @@ public class HolidayManager {
         PLACE_HEAD("INSERT INTO placed (head, world, x, y, z, pitch, yaw) VALUES (?,?,?,?,?,?,?);"),
         HEAD_AT("SELECT * FROM placed WHERE  world=? and x=? and y=? and z=? and pitch = ? and yaw=?"),
         GET_PLACED_HEADS("SELECT * FROM placed;"),
+        GET_PLACED_BY_ID("SELECT * FROM placed WHERE id=?;"),
         DELETE_HEAD("DELETE FROM placed WHERE id=?; "),
         CREATE_USER("INSERT INTO users (uuid, heads,found) VALUES (?,?,?);"),
         UPDATE_USER("UPDATE users SET heads=? , found=? WHERE uuid=?;"),

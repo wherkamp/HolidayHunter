@@ -1,6 +1,5 @@
 package me.kingtux.holidayhunter.commands;
 
-import me.kingtux.holidayhunter.HeadManager;
 import me.kingtux.holidayhunter.HolidayHunter;
 import me.kingtux.holidayhunter.HolidayManager;
 import me.kingtux.holidayhunter.HolidaySession;
@@ -85,8 +84,8 @@ public class HolidayCommand implements IkeaCommand {
             player.sendMessage(LangFile.LACK_OF_PERMISSION.getColorValue());
             return;
         }
-        if (args.length != 1) {
-            player.sendMessage("You Failed");
+        if (args.length == 0) {
+            player.sendMessage("Please provide either users, heads, or placed");
             return;
         }
         if (args[0].equalsIgnoreCase("users")) {

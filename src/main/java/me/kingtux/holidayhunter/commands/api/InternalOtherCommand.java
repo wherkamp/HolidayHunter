@@ -7,7 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class InternalOtherCommand {
-    private  final OtherCommand annotation;
+    private final OtherCommand annotation;
     private final Method methodToInvoke;
     private final IkeaCommand commandObject;
 
@@ -19,7 +19,11 @@ public class InternalOtherCommand {
 
     public void invoke(String[] args, CommandSender sender, String commandUsed) {
         try {
-            methodToInvoke.invoke(commandObject, CommandUtils.getParameters(args, methodToInvoke, commandObject,sender,commandUsed));
+            Object[] stuff = CommandUtils.getParameters(args, methodToInvoke, commandObject, sender, commandUsed);
+            if (stuff == null) {
+                return;
+            }
+            methodToInvoke.invoke(commandObject, stuff);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
