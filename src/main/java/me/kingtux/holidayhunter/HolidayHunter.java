@@ -1,21 +1,17 @@
 package me.kingtux.holidayhunter;
 
-import me.kingtux.holidayhunter.commands.api.CommandManager;
 import me.kingtux.holidayhunter.commands.HolidayCommand;
+import me.kingtux.holidayhunter.commands.api.CommandManager;
 import me.kingtux.holidayhunter.commands.api.IkeaCommandRules;
 import me.kingtux.holidayhunter.commands.api.MyIkeaCommandRules;
 import me.kingtux.holidayhunter.lang.LangFile;
 import me.kingtux.holidayhunter.lang.LangLoader;
 import me.kingtux.holidayhunter.listeners.PlayerListener;
 import me.kingtux.simpleannotation.AnnotationWriter;
-
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +19,7 @@ import java.util.Map;
 public final class HolidayHunter extends JavaPlugin {
     private Map<String, String> heads = new HashMap<>();
     private Map<Player, HolidaySession> sessions = new HashMap<>();
-    private HeadManager headManager;
+    private HolidayManager holidayManager;
 
     @Override
     public void onEnable() {
@@ -40,8 +36,7 @@ public final class HolidayHunter extends JavaPlugin {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        headManager = new HeadManager(this);
-
+        holidayManager = new HolidayManager(this);
         //Use IkeaCommand command library
         getLogger().info("IkeaEssentials Command and Lang API are implemented into this jar!");
         CommandManager commandManager = new CommandManager(this);
@@ -57,12 +52,13 @@ public final class HolidayHunter extends JavaPlugin {
         //Use IkeaLang Library
         LangLoader.loadLang(new File(getDataFolder(), "lang.yml"), LangFile.class, false);
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        new PlaceHolder(this).register();
     }
 
     @Override
     public void onDisable() {
         try {
-            headManager.getConnection().close();
+            holidayManager.getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,7 +88,7 @@ public final class HolidayHunter extends JavaPlugin {
         sessions.put(player, session);
     }
 
-    public HeadManager getHeadManager() {
-        return headManager;
+    public HolidayManager getHolidayManager() {
+        return holidayManager;
     }
 }

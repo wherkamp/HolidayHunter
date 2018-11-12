@@ -131,7 +131,7 @@ public class InternalCommand extends Command {
         System.out.println("Called");
         System.out.println(args.length);
         Arrays.stream(args).forEach(System.out::println);
-        if (args.length == 1) {
+        if (args.length == 1 || args.length == 0) {
             System.out.println("Base COmmand");
             if (internalBaseCommand.getTabCompleter() == null) {
                 System.out.println("Using Default Sub Commandor");
@@ -141,7 +141,7 @@ public class InternalCommand extends Command {
             } else {
                 return internalBaseCommand.invokeTab(args, sender, alias);
             }
-        } else if (args.length > 1) {
+        } else {
             for (InternalSubCommand internalSubCommand : internalSubCommands) {
                 if (internalSubCommand.getTabCompleter() != null && internalSubCommand.getTabCompleterMethod() != null) {
                     if (internalSubCommand.getTabCompleter().subCommandToEffect().equalsIgnoreCase(args[0])) {

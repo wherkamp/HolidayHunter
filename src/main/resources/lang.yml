@@ -2,10 +2,11 @@ common:
   must-be-a-player: 'Hey you must be a player'
   lack-of-permission: 'Sorry you lack permission to do that'
 already-have-a-session: 'We found you are already in a session! You are on step %s'
+please-run-hh-create-first: 'Please run /hh create first!'
 hunt-announcements:
   started-the-hunt: '%player_displayname% has joined the hunt'
   finished-the-hunt: '%player_displayname% has finished the hunt'
-  found-head: 'You found a head %hh_completed% of %hh_total%'
+already-collected: 'You already collected that head'
 command:
   set-name: 'RUn /hh name {name} to set the heads name'
   set-command: 'RUn /hh command {command1} | {command2} to set the heads commands'
@@ -16,3 +17,4 @@ item:
   name: 'Place head on ground to make a head'
   lore:
     - 'Right click to place'
+destroy-skull: 'The head has been destroyed and deleted'
