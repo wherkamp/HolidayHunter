@@ -109,7 +109,7 @@ public class HolidayManager {
         if (headProduct == null) {
             return null;
         }
-        ItemStack itemStack = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
         NBTItem nbti = new NBTItem(itemStack);
         nbti.setString("PURPOSE", holidayHunter.getName().toUpperCase());
         nbti.setInteger("ID", headProduct.getId());

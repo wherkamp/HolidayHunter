@@ -6,3 +6,4 @@ softdepend: [PlaceholderAPI]
 authors: [KingTux]
 description: Like finding heads on a Holiday well Merry Christmas
 website: https://kingtux.me
+api-version: 1.13

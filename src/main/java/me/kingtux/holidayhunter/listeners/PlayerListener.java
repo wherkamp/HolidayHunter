@@ -32,7 +32,7 @@ public class PlayerListener implements Listener {
         if (event.getBlock() == null) {
             return;
         }
-        if (event.getBlock().getType() != Material.SKULL) {
+        if (event.getBlock().getType() != Material.PLAYER_HEAD) {
             return;
         }
         NBTItem item = new NBTItem(event.getItemInHand());
@@ -57,7 +57,7 @@ public class PlayerListener implements Listener {
         if (event.getBlock() == null) {
             return;
         }
-        if (event.getBlock().getType() != Material.SKULL) {
+        if (event.getBlock().getType() != Material.PLAYER_HEAD) {
             return;
         }
         if (holidayHunter.getHolidayManager().getHeadProductAt(event.getBlock().getLocation()) == null) {
@@ -76,7 +76,7 @@ public class PlayerListener implements Listener {
         if (event.getClickedBlock() == null) {
             return;
         }
-        if (event.getClickedBlock().getType() != Material.SKULL) {
+        if (event.getClickedBlock().getType() != Material.PLAYER_HEAD) {
             return;
         }
         if (holidayHunter.getHolidayManager().getHeadProductAt(event.getClickedBlock().getLocation()) == null) {
